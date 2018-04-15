@@ -9,18 +9,49 @@ int altura;
 int profundidade;
 int areaBase;
 int valorUtilidade;
+int idCaixa;
 char rotacao[3];
 }Caixa;
 
+void quicksort(Caixa *A, int esq, int dir) { // esq 0, n-1
+    Caixa y;
+    int i = esq;
+    int j = dir;
+    int pivo = A[(esq + dir) / 2].areaBase;
+
+    while(i <= j) {
+        while(A[i].areaBase > pivo && i < dir)
+            i++;
+        while(A[j].areaBase < pivo && j > esq)
+            j--;
+        if(i <= j) {
+            y = A[i];
+            A[i] = A[j];
+            A[j] = y;
+            i++;
+            j--;
+        }
+    }
+    if(j > esq)
+        quicksort(A, esq, j);
+    if(i < dir)
+        quicksort(A, i, dir);
+}
+int compara(const void *a, const void *b){
+    Caixa *caixas = (Caixa *)a;
+    Caixa *caixasRot = (Caixa *)b;
+    return (caixasRot->areaBase - caixas->areaBase);
+}
+
 void insertionSortBase(Caixa *V,int n){
-    int i, j;
+    int i, j= 0;
     Caixa aux;
     for(i=1; i<n;i++){
         aux = V[i];
-        for(j=i; j>0 && (aux.areaBase<V[j-1].areaBase);j--)
+        for(j=i; j>0 && (aux.areaBase<V[j-1].areaBase);j--){
             V[j] = V[j - 1];
+            }
         V[j] = aux;
-
     }
 }
 int main(void){
@@ -88,6 +119,7 @@ Caixa *caixasRot;
             caixas[k].profundidade = atoi(result);
             caixas[k].areaBase = caixas[k].largura * caixas[k].profundidade;
             strcpy(caixas[k].rotacao,"R1");
+            caixas[k].idCaixa = k;
             printf("Caixa[%d].profunfidade = %d\n", k, caixas[k].profundidade );
         k++;
         }
@@ -108,6 +140,7 @@ Caixa *caixasRot;
   for (i=0;i<2*numCaixas;i++){
     if(i<numCaixas){
         caixasRot[i] = caixas[i];
+        printf("CaixasRot[%d/.idCaixa = %d\n",i,caixasRot[i].idCaixa);
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
         printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
@@ -115,6 +148,8 @@ Caixa *caixasRot;
         printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
         printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
     }else{
+        caixasRot[i].idCaixa = caixas[k].idCaixa;
+        printf("CaixasRot[%d/.idCaixa = %d\n",i,caixasRot[i].idCaixa);
         strcpy(caixasRot[i].rotacao,"R2");;
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         caixasRot[i].valorUtilidade = caixas[k].valorUtilidade;
@@ -130,7 +165,25 @@ Caixa *caixasRot;
         k++;
     }
 }
+//ordenação da entrada pela área da base
+numCaixas *=2;
+quicksort(caixasRot,0, numCaixas-1);
 
+//void qsort(caixasRot,numCaixas,sizeof(caixasRot),compara);
+//insertionSortBase(caixasRot,numCaixas);
+
+printf("Antes do for ordenado \n");
+for(i = 0;i<numCaixas;i++){
+        printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
+        printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
+        printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
+        printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
+        printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
+        printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
+        printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
+
+}
+printf("depois do for ordenado \n");
 
   fclose(arq);
 
