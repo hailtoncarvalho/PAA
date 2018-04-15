@@ -51,9 +51,9 @@ Caixa *caixasRot;
   k = 0;
   while (!feof(arq))
   {
-	// Lê uma linha (inclusive com o '\n')
-      result = fgets(Linha, 100, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
-      if (result)  // Se foi possível ler
+	// LÃª uma linha (inclusive com o '\n')
+      result = fgets(Linha, 100, arq);  // o 'fgets' lÃª atÃ© 99 caracteres ou atÃ© o '\n'
+      if (result)  // Se foi possÃ­vel ler
 	  //printf("Linha %d : %s",i,Linha);
 
       if(i == 1){
@@ -87,7 +87,7 @@ Caixa *caixasRot;
         if((i-(numCaixas+3))%3==2){
             caixas[k].profundidade = atoi(result);
             caixas[k].areaBase = caixas[k].largura * caixas[k].profundidade;
-            caixas[k].rotacao = strcpy(caixas[k].rotacao,"R1");
+            strcpy(caixas[k].rotacao,"R1");
             printf("Caixa[%d].profunfidade = %d\n", k, caixas[k].profundidade );
         k++;
         }
@@ -102,21 +102,21 @@ Caixa *caixasRot;
   for (i = 0;i<numCaixas;i++){
 
   }
-  //Preenchimento do vetor com as caixas com as duas rotações
+  //Preenchimento do vetor com as caixas com as duas rotaÃ§Ãµes
   caixasRot = (Caixa *)malloc(2*numCaixas * sizeof(Caixa));
   k = 0;
   for (i=0;i<2*numCaixas;i++){
     if(i<numCaixas){
         caixasRot[i] = caixas[i];
-        printf("CaixasRot[%d].rotacao = %c\n",i,caixasRot[i].rotacao);
+        printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
         printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
         printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
         printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
         printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
     }else{
-        caixasRot[i].rotacao = strcpy(caixasRot[i].rotacao,"R2");;
-        printf("CaixasRot[%d].rotacao = %c\n",i,caixasRot[i].rotacao);
+        strcpy(caixasRot[i].rotacao,"R2");;
+        printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         caixasRot[i].valorUtilidade = caixas[k].valorUtilidade;
         printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
         caixasRot[i].altura = caixas[k].largura;
@@ -129,8 +129,7 @@ Caixa *caixasRot;
         printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
         k++;
     }
-
-    }
+}
 
 
   fclose(arq);
