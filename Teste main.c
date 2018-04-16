@@ -54,12 +54,28 @@ void insertionSortBase(Caixa *V,int n){
         V[j] = aux;
     }
 }
+
+int empilhavel(Caixa acima, Caixa abaixo){
+    if (acima.areaBase <= abaixo.areaBase     &&
+        acima.profundidade <= abaixo.profundidade &&
+        acima.largura <= abaixo.largura ){
+        return 1;
+        }else{
+        return 0;
+        }
+}
 int main(void){
 
+int **mCaixaria;
 int hPilha;
 int numCaixas;
+int valorTotal;
+int empilhadas;
+int alturaRestante;
+Caixa *solucao;
 Caixa *caixas;
 Caixa *caixasRot;
+Caixa **caixaria;
 
  FILE *arq;
   char Linha[100];
@@ -185,8 +201,31 @@ for(i = 0;i<numCaixas;i++){
 }
 printf("depois do for ordenado \n");
 
-  fclose(arq);
+printf("Empilhavel: %d\n",empilhavel(caixasRot[0],caixasRot[0]));
 
+/*
+caixaria = (Caixa**)malloc(numCaixas * sizeof(Caixa*));
+for (i=0;i<numCaixas;i++){
+    caixaria[i] = (Caixa*)malloc(numCaixas * sizeof(Caixa*));
+}
+*/
+
+mCaixaria = (int *)malloc(numCaixas * sizeof (int));
+
+for (j = 0; j < numCaixas; j++)
+    mCaixaria[j] = (int *)malloc(hPilha*sizeof(int));
+
+for(i = 0; i<numCaixas;i++){
+for (j = 0; j <= hPilha; j++){
+    mCaixaria[i][j] = 0;
+    printf("m[%d][%d] = %d ",i,j,mCaixaria[i][j]);
+}
+}
+
+
+free (mCaixaria);
+
+  fclose(arq);
   free(caixas);
   free(caixasRot);
   return 0;
