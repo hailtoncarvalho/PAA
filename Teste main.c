@@ -49,13 +49,13 @@ void insertionSortBase(Caixa *V,int n){
     Caixa aux;
     for(i=1; i<n;i++){
         aux = V[i];
-        for(j=i; j>0 && (aux.areaBase<V[j-1].areaBase);j--){
+        for(j=i; j>0 && (aux.valorUtilidade<V[j-1].valorUtilidade);j--){
             V[j] = V[j - 1];
             }
         V[j] = aux;
     }
 }
-
+//Verifica se caixa de cima é empilhável na caixa de baixo
 int empilhavel(Caixa acima, Caixa abaixo){
     if (acima.profundidade <= abaixo.profundidade &&
         acima.largura <= abaixo.largura ){
@@ -86,9 +86,10 @@ return menor;
 }
 int main(void){
 
-int **mCaixaria;
+
 int ***pilhaCaixa;
 int **pilhaCaixa2d;
+int **mAdjacencia;
 int hPilha;
 int *vetUtilidade;
 int numCaixas;
@@ -114,7 +115,7 @@ Caixa **caixaria;
 
 
   // Abre um arquivo TEXTO para LEITURA
-  arq = fopen("stk1000.data", "rt");
+  arq = fopen("stk10.data", "rt");
 
   if (arq == NULL)  // Se houve erro na abertura
   {
@@ -185,7 +186,7 @@ Caixa **caixaria;
   for (i=0;i<2*numCaixas;i++){
     if(i<numCaixas){
         caixasRot[i] = caixas[i];
-        printf("CaixasRot[%d/.idCaixa = %d\n",i,caixasRot[i].idCaixa);
+        printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
         printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
@@ -194,7 +195,7 @@ Caixa **caixaria;
         printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
     }else{
         caixasRot[i].idCaixa = caixas[k].idCaixa;
-        printf("CaixasRot[%d/.idCaixa = %d\n",i,caixasRot[i].idCaixa);
+        printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
         strcpy(caixasRot[i].rotacao,"R2");;
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
         caixasRot[i].valorUtilidade = caixas[k].valorUtilidade;
@@ -212,12 +213,11 @@ Caixa **caixaria;
 }
 //ordenação da entrada pela área da base
 numCaixas *=2;
-quicksort(caixasRot,0, numCaixas-1);
+//quicksort(caixasRot,0, numCaixas-1);
 
-//qsort(caixasRot,numCaixas,sizeof(caixasRot),compara);
+qsort(caixasRot,numCaixas,sizeof(caixasRot),compara);
 //insertionSortBase(caixasRot,numCaixas);
 
-printf("Antes do for ordenado \n");
 for(i = 0;i<numCaixas;i++){
         printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
@@ -238,13 +238,36 @@ for (i=0;i<numCaixas;i++){
     caixaria[i] = (Caixa*)malloc(numCaixas * sizeof(Caixa*));
 }
 */
+
+
+//for(i = 0;i < numCaixas; i++){
+//    for(j = 0; j<numCaixas; j++){
+//        if(empilhavel(caixasRot[i], caixasRot[j])==1){
+//            mAdjacencia[i][j] = 1;
+//        }
+//        //printf("c[%d][%d] = %d",i,j,mAdjacencia[i][j]);
+//    }
+//    printf("\n");
+//}
+
 numCaixas +=1;
 hPilha +=1;
-mCaixaria = (int *)malloc(numCaixas * sizeof (int));
-for (j = 0; j < numCaixas; j++){
-    mCaixaria[j] = (int *)malloc(hPilha*sizeof(int));
-}
 
+mAdjacencia = (int *)malloc(numCaixas * sizeof (int));
+for (j = 0; j < numCaixas; j++){
+    mAdjacencia[j] = (int *)malloc(hPilha*sizeof(int));
+}
+for(i = 1; i<numCaixas; i++){
+        printf("\n");
+    for(j = 1;j <numCaixas; j++){
+        if(empilhavel(caixasRot[i-1],caixasRot[j-1])==1){
+            mAdjacencia[i-1][j-1] = 1;
+        }else{
+            mAdjacencia[i-1][j-1] = 0;
+        }
+        printf("(%d,%d):%d",i-1,j-1,mAdjacencia[i-1][j-1]);
+    }
+}
 
 
 
@@ -279,7 +302,7 @@ for(i = 0;i<numCaixas;i++){
             }else if(caixasRot[i-1].altura < j){
                 pilhaCaixa2d[i][j] = (int)floor(j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade;
             }
-        }else if(j == caixasRot[i-1].altura){ //Se altura da caixa for igual à altura testada
+        }else if( i>0 && j == caixasRot[i-1].altura){ //Se altura da caixa for igual à altura testada
                 pilhaCaixa2d[i][j] = caixasRot[i-1].valorUtilidade;
 
                     if(pilhaCaixa2d[i-1][j] > pilhaCaixa2d[i][j]){
@@ -287,15 +310,37 @@ for(i = 0;i<numCaixas;i++){
                     }else if(pilhaCaixa2d[i][j-1] > pilhaCaixa2d[i][j]){
                             pilhaCaixa2d[i][j] = pilhaCaixa2d[i][j-1];
                     }
-        }  else if(i>0 && j < caixasRot[i-1].altura){
+        }  else if(i > 0 && j < caixasRot[i-1].altura){
                 pilhaCaixa2d[i][j] = 0;
                 if(pilhaCaixa2d[i-1][j] > pilhaCaixa2d[i][j]){
                         pilhaCaixa2d[i][j] = pilhaCaixa2d[i-1][j];
                 }else if(pilhaCaixa2d[i][j-1] > pilhaCaixa2d[i][j]){
                             pilhaCaixa2d[i][j] = pilhaCaixa2d[i][j-1];
-        }
+                }
         }else if(i > 0 && j > caixasRot[i-1].altura){
             pilhaCaixa2d[i][j] = (int)floor(j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade;
+            //  pilhaCaixa2d[i][j] = caixasRot[i-1].valorUtilidade;
+                for(k= 1;k<i;k++){
+                if(empilhavel(caixasRot[i-1], caixasRot[k-1]) == 1 &&
+                   caixasRot[k-1].altura + caixasRot[i-1].altura <= j &&
+                   caixasRot[k-1].valorUtilidade + caixasRot[i-1].valorUtilidade<= floor(j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade){
+                    pilhaCaixa2d[i][j] = caixasRot[i-1].valorUtilidade + caixasRot[k-1].valorUtilidade;
+                }
+            }
+//            if(pilhaCaixa2d[i-1][j] > pilhaCaixa2d[i][j]){
+//                pilhaCaixa2d[i][j] = pilhaCaixa2d[i-1][j];
+//                }else if(pilhaCaixa2d[i][j-1] > pilhaCaixa2d[i][j]){
+//                    pilhaCaixa2d[i][j] = pilhaCaixa2d[i][j-1];
+//                }
+
+
+
+//            for(k = 1;k<numCaixas;k++){
+//                if(mAdjacencia[i-1][k-1]==1 && floor(j/(caixasRot[i-1].altura + caixasRot[k-1].altura) >= 1 &&
+//                 pilhaCaixa2d[i][j]< floor(j/caixasRot[k-1].altura)*caixasRot[i-1].valorUtilidade )){
+//                 pilhaCaixa2d[i][j]=floor(j/caixasRot[k-1].altura)*caixasRot[k-1].valorUtilidade;
+//                }
+//            }
 //            for (k = 1;k<numCaixas; k++){
 //                //printf("entrou no for interno");
 //                    if(empilhavel(caixasRot[k-1],caixasRot[i-1]) == 1 &&
@@ -325,11 +370,11 @@ printf("(Caixas, Sol. Otima) = (%d,%d)",(numCaixas - 1)/2, k);
 //
 //    for(j = 0;j<=i; j++){
 //        if(empilhavel(caixasRot[i],caixasRot[j]) == 1){
-//            mCaixaria[i][j] = 1;
-//            printf("V[%d][%d]= %d\n",i,j,mCaixaria[i][j]);
+//            mAdjacencia[i][j] = 1;
+//            printf("V[%d][%d]= %d\n",i,j,mAdjacencia[i][j]);
 //        }else{
-//            mCaixaria[i][j] = 0;
-//            printf("V[%d][%d]= %d\n",i,j,mCaixaria[i][j]);
+//            mAdjacencia[i][j] = 0;
+//            printf("V[%d][%d]= %d\n",i,j,mAdjacencia[i][j]);
 //        }
 //    }
 //}
@@ -391,15 +436,17 @@ printf("(Caixas, Sol. Otima) = (%d,%d)",(numCaixas - 1)/2, k);
 //
 //for(i = 0; i<=numCaixas;i++){
 //    for (j = 0; j <= hPilha; j++){
-//    //mCaixaria[i][j] = 0;
+//    //mAdjacencia[i][j] = 0;
 //}
 //}
+
 free(vetUtilidade);
 free(pilhaCaixa);
 free(pilhaCaixa2d);
-free(mCaixaria);
+free(mAdjacencia);
 fclose(arq);
 free(caixas);
 free(caixasRot);
+
 return 0;
 }
