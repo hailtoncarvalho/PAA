@@ -83,7 +83,7 @@ int main()
     int i,j,k;
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("stk03h.data", "rt");
+    arq = fopen("stk05h.data", "rt");
 
     if (arq == NULL)  // Se houve erro na abertura
     {
@@ -174,7 +174,7 @@ int main()
     numCaixas *=2;
 
     //Ordena caixas pela área da base
-    //insertionSort(caixasRot,numCaixas);
+    insertionSort(caixasRot,numCaixas);
 
     //Conferência das caixas rotacionadas
     for(i = 0; i<numCaixas; i++)
@@ -283,10 +283,10 @@ int main()
                             m[i][j] = m[i-1][j];
                             empilhar[i][j] = empilhar[i-1][j];
                         }
-                    }
+                    }//ok
                     if(j > caixasRot[i-1].altura)
                     {
-                        if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade < m[i-1][j])
+                        if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade <= m[i-1][j]) // < testar
                         {
                             m[i][j] = m[i-1][j];
                             empilhar[i][j] = empilhar[i-1][j];
@@ -296,23 +296,21 @@ int main()
                         {
                             if(mAdjacencia[i-1][empilhar[i][j-caixasRot[i-1].altura]] == 1)
                             {
-                                m[i][j] = caixasRot[i-1].valorUtilidade + m[i][j-caixasRot[i-1].altura];
+                                //ISSO NÃO FAZ NENHUM SENTIDO
+                                m[i][j] = m[i][j-caixasRot[i-1].altura]+ caixasRot[i-1].valorUtilidade; // = 3, J =6
                                 empilhar[i][j] = empilhar[i][j-caixasRot[i-1].altura];
+                               // printf("-> ",j-caixasRot[i-1].altura); //Verificar o que está acontecendo aqui
                             }
                             else
                             {
-                                for(k = 1; k<i; k++)
+                                for(k = 1; k<i-1; k++)
                                 {
-                                    if(mAdjacencia[i-1][k-1]==1)
+                                    if(mAdjacencia[i-1][empilhar[k][j-caixasRot[i-1].altura]] == 1)
                                     {
-                                        m[i][j] = m[i][j-caixasRot[i].altura] + caixasRot[empilhar[i-1][j]].valorUtilidade;
+                                        m[i][j] = m[k][j-caixasRot[i-1].altura] + caixasRot[empilhar[i-1][j]].valorUtilidade;
                                         empilhar[i][j] = i-1;
                                     }
-                                    if(mAdjacencia[k-1][i-1]==1)
-                                    {
-                                        m[i][j]=caixasRot[i-1].valorUtilidade + caixasRot[empilhar[k][j-caixasRot[i-1].altura]].valorUtilidade;
-                                        empilhar[i][j] = empilhar[k][j-caixasRot[i-1].altura];
-                                    }
+
                                 }
                             }
                         }
@@ -325,6 +323,16 @@ int main()
         printf("\n");
     }
 
+    solucOtima = m[0][0];
+    for(i=0;i<numCaixas;i++){
+        for(j=0;j<hPilha;j++){
+            if(m[i][j]>solucOtima){
+                solucOtima = m[i][j];
+            }
+        }
+    }
+
+    printf("Soluc. Otima (%d,%d)",numCaixas/2,solucOtima);
     return 0;
 
     free(m[0]);
