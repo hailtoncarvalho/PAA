@@ -165,7 +165,7 @@ int main()
             caixasRot[i].altura = caixas[k].largura;
             caixasRot[i].largura = caixas[k].altura;
             caixasRot[i].profundidade = caixas[k].profundidade;
-            caixasRot[i].areaBase = caixasRot[i].largura * caixasRot[i].profundidade;
+            caixasRot[i].areaBase = caixasRot[i].profundidade * caixasRot[i].largura;
             k++;
         }
     }//Fim preenchimento caixas rotacionadas
@@ -174,18 +174,18 @@ int main()
     numCaixas *=2;
 
     //Ordena caixas pela área da base
-    insertionSort(caixasRot,numCaixas);
+    //insertionSort(caixasRot,numCaixas);
 
     //Conferência das caixas rotacionadas
     for(i = 0; i<numCaixas; i++)
     {
         printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
         printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
-        //printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
-        //printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
-        //printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
-        //printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
-        //printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
+        printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
+        printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
+        printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
+        printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
+        printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
 
 }
 
@@ -273,7 +273,7 @@ int main()
 
                     if(j == caixasRot[i-1].altura)
                     {
-                        if(caixasRot[i-1].valorUtilidade>=m[i-1][j])
+                        if(caixasRot[i-1].valorUtilidade > m[i-1][j])
                         {
                             m[i][j] = caixasRot[i-1].valorUtilidade;
                             empilhar[i][j] = i-1;
@@ -286,13 +286,13 @@ int main()
                     }
                     if(j > caixasRot[i-1].altura)
                     {
-                        if(m[i][j-caixasRot[i-1].valorUtilidade] + caixasRot[i-1].valorUtilidade < m[i-1][j])
+                        if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade < m[i-1][j])
                         {
                             m[i][j] = m[i-1][j];
                             empilhar[i][j] = empilhar[i-1][j];
                         }
 
-                        else if(m[i][j-caixasRot[i-1].valorUtilidade] + caixasRot[i-1].valorUtilidade >= m[i-1][j])
+                         if(m[i][j-caixasRot[i-1].valorUtilidade] + caixasRot[i-1].valorUtilidade >= m[i-1][j])
                         {
                             if(mAdjacencia[i-1][empilhar[i][j-caixasRot[i-1].altura]] == 1)
                             {
