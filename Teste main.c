@@ -83,7 +83,7 @@ int main()
     int i,j,k;
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("s50.data", "rt");
+    arq = fopen("s15.data", "rt");
 
     if (arq == NULL)  // Se houve erro na abertura
     {
@@ -247,6 +247,7 @@ int main()
         empilhar[j] = (int*)malloc(hPilha * sizeof(int));
     }
 
+    //Preenchendo matrizes de memoização e memorização da útima caixa empilhada.
     for(i = 0; i < numCaixas; i++)
     {
         for(j = 0; j < hPilha; j++)
@@ -286,6 +287,7 @@ int main()
                         {
                             m[i][j] = m[i-1][j];
                             empilhar[i][j] = empilhar[i-1][j];
+
                         }
                     }//ok
                     if(j > caixasRot[i-1].altura)
@@ -309,7 +311,7 @@ int main()
                             {
                                 for(k = 1; k<i-1; k++)
                                 {
-                                    if(mAdjacencia[i-1][empilhar[k][j-caixasRot[i-1].altura]] == 1)
+                                    if(mAdjacencia[i-1][(empilhar[k][j-caixasRot[i-1].altura])-1] == 1)
                                     {
                                         m[i][j] = m[k][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade;
                                         empilhar[i][j] = i;
@@ -318,10 +320,14 @@ int main()
                                 }
                             }
                         }
-
+                        if(m[i][j]<m[i][j-1]){
+                            m[i][j] = m[i][j-1];
+                                empilhar[i][j] = empilhar[i][j-1];
+                        }
                     }
                 }
             }
+
             printf("%d,%d:%d ",i,j,m[i][j]);
         }
         printf("\n");
