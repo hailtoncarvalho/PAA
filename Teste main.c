@@ -254,14 +254,18 @@ int main()
             if(i==0 || j==0)
             {
                 m[i][j] = 0;
-                empilhar[i][j] = -1;
+                empilhar[i][j] = 0;
             }
             if(i>=1)
             {
                 if(i==1) //ok
                 {
                     m[i][j] = floor(j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade;
-                    empilhar[i][j] = i-1;
+                    if(j < caixasRot[i-1].altura){
+                        empilhar[i][j] = 0;
+                    }else{
+                        empilhar[i][j] = i;
+                    }
                 }
                 else
                 {
@@ -276,7 +280,7 @@ int main()
                         if(caixasRot[i-1].valorUtilidade > m[i-1][j])
                         {
                             m[i][j] = caixasRot[i-1].valorUtilidade;
-                            empilhar[i][j] = i-1;
+                            empilhar[i][j] = i;
                         }
                         else
                         {
@@ -292,13 +296,13 @@ int main()
                             empilhar[i][j] = empilhar[i-1][j];
                         }
 
-                         if(m[i][j-caixasRot[i-1].valorUtilidade] + caixasRot[i-1].valorUtilidade >= m[i-1][j])
+                         if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade > m[i-1][j])
                         {
                             if(mAdjacencia[i-1][empilhar[i][j-caixasRot[i-1].altura]] == 1)
                             {
                                 //ISSO NÃO FAZ NENHUM SENTIDO
-                                m[i][j] = m[i][j-caixasRot[i-1].altura]+ caixasRot[i-1].valorUtilidade; // = 3, J =6
-                                empilhar[i][j] = empilhar[i][j-caixasRot[i-1].altura];
+                                m[i][j] = m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade; // = 3, J =6
+                                empilhar[i][j] = i;
                                // printf("-> ",j-caixasRot[i-1].altura); //Verificar o que está acontecendo aqui
                             }
                             else
@@ -307,8 +311,8 @@ int main()
                                 {
                                     if(mAdjacencia[i-1][empilhar[k][j-caixasRot[i-1].altura]] == 1)
                                     {
-                                        m[i][j] = m[k][j-caixasRot[i-1].altura] + caixasRot[empilhar[i-1][j]].valorUtilidade;
-                                        empilhar[i][j] = i-1;
+                                        m[i][j] = m[k][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade;
+                                        empilhar[i][j] = i;
                                     }
 
                                 }
