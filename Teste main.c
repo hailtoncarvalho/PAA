@@ -83,7 +83,7 @@ int main()
     int i,j,k;
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("stk05h.data", "rt");
+    arq = fopen("s50.data", "rt");
 
     if (arq == NULL)  // Se houve erro na abertura
     {
@@ -298,7 +298,7 @@ int main()
 
                          if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade > m[i-1][j])
                         {
-                            if(mAdjacencia[i-1][empilhar[i][j-caixasRot[i-1].altura]] == 1)
+                            if(mAdjacencia[i-1][(empilhar[i][j-caixasRot[i-1].altura])-1] == 1)
                             {
                                 //ISSO NÃO FAZ NENHUM SENTIDO
                                 m[i][j] = m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade; // = 3, J =6
