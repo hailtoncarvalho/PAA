@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 //estrutura da caixa
 typedef struct
@@ -45,26 +45,13 @@ int empilhavel(Caixa acima, Caixa abaixo)
 }
 
 //Função que retorna maior de dois valores
-int maior(int a, int b)
-{
-    if(a > b)
-        return a;
-    else
-        return b;
-}
+
 
 //Função que retorna menor de dois valores
-int menor(int a, int b)
-{
-    if(a < b)
-        return a;
-    else
-        return b;
-}
 
 
-//MAIN
-int main()
+
+int main(int argc, char *argv[])
 {
 
 
@@ -79,13 +66,20 @@ int main()
     Caixa *caixasRot;//Vetor que armazena caixas e suas respectivas rotações
     FILE *arq;
     char Linha[15];
+    char *entrada;
+    char *saida;
+
     char *result;
     int i,j,k;
 
-    // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("s15.data", "rt");
+    //entrada = argv[0];
+    //saida = argv[1];
+    //arq = fopen(entrada, "rt");
+    clock_t end,start;
 
-    if (arq == NULL)  // Se houve erro na abertura
+    start = clock();
+    arq = fopen(argv[1], "rt");
+    if (arq == NULL)
     {
         printf("Problemas na abertura do arquivo\n");
         return 0;
@@ -96,17 +90,16 @@ int main()
     k = 0;
     while (!feof(arq))
     {
-        // Lê uma linha (inclusive com o '\n')
-        result = fgets(Linha, 15, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
-        if (result)  // Se foi possível ler
-            //printf("Linha %d : %s",i,Linha);
+        result = fgets(Linha, 15, arq);
+        if (result)
+
 
             if(i == 1)
             {
                 numCaixas = atoi(result);
                 printf("Numero de caixas %d: \n",numCaixas);
                 caixas = (Caixa *)malloc(numCaixas * sizeof(Caixa));
-                //caixas2 = (Caixa *)malloc(numCaixas * sizeof(Caixa));
+
             }
 
         if(i == 2)
@@ -177,17 +170,17 @@ int main()
     insertionSort(caixasRot,numCaixas);
 
     //Conferência das caixas rotacionadas
-    for(i = 0; i<numCaixas; i++)
-    {
-        printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
-        printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
-        printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
-        printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
-        printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
-        printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
-        printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
-
-}
+//    for(i = 0; i<numCaixas; i++)
+//    {
+//        printf("CaixasRot[%d].idCaixa = %d\n",i,caixasRot[i].idCaixa);
+//        printf("CaixasRot[%d].rotacao = %s\n",i,caixasRot[i].rotacao);
+//        printf("CaixasRot[%d].valorUtilidade = %d\n",i,caixasRot[i].valorUtilidade);
+//        printf("CaixasRot[%d].altura = %d\n",i,caixasRot[i].altura);
+//        printf("CaixasRot[%d].largura = %d\n",i,caixasRot[i].largura);
+//        printf("CaixasRot[%d].profundidade = %d\n",i,caixasRot[i].profundidade);
+//        printf("CaixasRot[%d].areaBase = %d\n",i,caixasRot[i].areaBase);
+//
+//}
 
     //adicionar 1 no número de caixas e altura máxima da pilha de caixas, para anular o índice zero
 
@@ -195,7 +188,7 @@ int main()
     hPilha +=1;
 
     //alocação de memória da matriz de adjacências
-    mAdjacencia = (int *)malloc(numCaixas * sizeof (int));
+    mAdjacencia = (int **)malloc(numCaixas * sizeof (int *));
     for (j = 0; j < numCaixas; j++)
     {
         mAdjacencia[j] = (int *)malloc(numCaixas*sizeof(int));
@@ -215,33 +208,18 @@ int main()
             {
                 mAdjacencia[i][j] = 0;
             }
-            //printf("(%d,%d):%d",i,j,mAdjacencia[i][j]);
         }
-        //printf("\n");
     }
 
 //Alocação de memória da matriz de memoização, e memória de última caixa adicionada
 
-    m = (int*)malloc(numCaixas * sizeof (int));
+    m = (int**)malloc(numCaixas * sizeof (int *));
     for (j = 0; j < numCaixas; j++)
     {
         m[j] = (int*)malloc(hPilha * sizeof(int));
     }
 
-    empilhar = (int*)malloc(numCaixas * sizeof (int));
-    for (j = 0; j < numCaixas; j++)
-    {
-        empilhar[j] = (int*)malloc(hPilha * sizeof(int));
-    }
-
-
-    m = (int*)malloc(numCaixas * sizeof (int));
-    for (j = 0; j < numCaixas; j++)
-    {
-        m[j] = (int*)malloc(hPilha * sizeof(int));
-    }
-
-    empilhar = (int*)malloc(numCaixas * sizeof (int));
+    empilhar = (int**)malloc(numCaixas * sizeof (int*));
     for (j = 0; j < numCaixas; j++)
     {
         empilhar[j] = (int*)malloc(hPilha * sizeof(int));
@@ -261,7 +239,7 @@ int main()
             {
                 if(i==1) //ok
                 {
-                    m[i][j] = floor(j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade;
+                    m[i][j] = (j/caixasRot[i-1].altura)*caixasRot[i-1].valorUtilidade;
                     if(j < caixasRot[i-1].altura){
                         empilhar[i][j] = 0;
                     }else{
@@ -289,10 +267,10 @@ int main()
                             empilhar[i][j] = empilhar[i-1][j];
 
                         }
-                    }//ok
+                    }
                     if(j > caixasRot[i-1].altura)
                     {
-                        if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade <= m[i-1][j]) // < testar
+                        if(m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade <= m[i-1][j])
                         {
                             m[i][j] = m[i-1][j];
                             empilhar[i][j] = empilhar[i-1][j];
@@ -302,10 +280,8 @@ int main()
                         {
                             if(mAdjacencia[i-1][(empilhar[i][j-caixasRot[i-1].altura])-1] == 1)
                             {
-                                //ISSO NÃO FAZ NENHUM SENTIDO
-                                m[i][j] = m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade; // = 3, J =6
+                                m[i][j] = m[i][j-caixasRot[i-1].altura] + caixasRot[i-1].valorUtilidade;
                                 empilhar[i][j] = i;
-                               // printf("-> ",j-caixasRot[i-1].altura); //Verificar o que está acontecendo aqui
                             }
                             else
                             {
@@ -328,22 +304,70 @@ int main()
                 }
             }
 
-            printf("%d,%d:%d ",i,j,m[i][j]);
+            //printf("%d,%d:%d ",i,j,m[i][j]);
         }
-        printf("\n");
+//  printf("\n");
     }
 
-    solucOtima = m[0][0];
-    for(i=0;i<numCaixas;i++){
-        for(j=0;j<hPilha;j++){
-            if(m[i][j]>solucOtima){
-                solucOtima = m[i][j];
-            }
+
+
+    printf("Soluc. Otima (%d,%d)\n",numCaixas/2,m[numCaixas-1][hPilha-1]);
+    solucOtima = m[numCaixas-1][hPilha-1];
+    int *solucao = (int*) malloc (hPilha*sizeof(int));
+    for(i=0;i<hPilha;i++){
+        solucao[i] = -1;
+    }
+    int n = numCaixas-1;
+    int h = hPilha-1;
+
+    int maxC;
+    j=0;
+    while(n>0 && h>0){
+        int cx = n;
+        for(int i=n; i>=1; i--){
+            if(m[i][h]==m[i-1][h])
+                cx = i-1;
+            else
+                break;
         }
+        if(cx>0)
+            solucao[j]=cx-1;
+        j++;
+        maxC =j;
+        h=h-caixasRot[cx-1].altura;
+        n=cx;
     }
 
-    printf("Soluc. Otima (%d,%d)",numCaixas/2,solucOtima);
-    return 0;
+    printf("Num caixas empilhadas: %d\n",maxC);
+    for(i =0; i<=hPilha-2;i++){
+        if(solucao[i]!=-1){
+           // printf("%d %s\n",caixasRot[solucao[i]].idCaixa,caixasRot[solucao[i]].rotacao);
+        }
+    }
+//FILE *sol = fopen(saida, "w");
+    FILE *sol = fopen(argv[2], "w");
+    if(!sol)
+    {
+        fprintf(stderr,"Erro: nao foi possivel abrir o arquivo de sols.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(sol, "%d",solucOtima);
+    fprintf(sol, "\n");
+    fprintf(sol, "%d",maxC);
+    fprintf(sol, "\n");
+    for(i = hPilha-2; i>=0;i--){
+        if (solucao[i]!=-1){
+        fprintf(sol, "%d ", caixasRot[solucao[i]].idCaixa );
+        fprintf(sol, "%s ", caixasRot[solucao[i]].rotacao );
+        fprintf(sol, "\n");
+        }
+
+    }
+    fclose(sol);
+
+
+
 
     free(m[0]);
     free(m);
@@ -352,4 +376,8 @@ int main()
     free(caixas);
     free(caixasRot);
 
+end = clock();
+printf("Tempo gasto: %3.0f ms\n\n",1000*(double)(end-start)/(double)(CLOCKS_PER_SEC));
+
+    return 0;
 }
