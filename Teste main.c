@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
 
     //entrada = argv[0];
     //saida = argv[1];
+	
     //arq = fopen(entrada, "rt");
     clock_t end,start;
 
