@@ -1,5 +1,5 @@
 # PAA
-Disciplina Projeto e Análise de Algoritimos - Pós-Graduação UFOP 2018.1
+Disciplina Projeto e Análise de Algoritmos - Pós-Graduação UFOP 2018.1
 
 Trabalho prático I - Programação Dinâmica
 
